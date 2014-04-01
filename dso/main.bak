@@ -1,0 +1,67 @@
+#include "kb.h"
+#include "flag.h"
+#include "sems.h"
+#include "sched.h"
+#include "main_aux.h"
+
+// Grupo de flags para el teclado:
+//  * Flag #1: tecla 'A'
+//  * Flag #2: tecla 'Z'
+//  * Flag #3: tecla 'K'
+//  * Flag #4: tecla 'M'
+//  * Flag #5: tecla '+'
+//  * Flag #6: tecla '-'
+//  * Flag #7: tecla 'q'
+//  * Flag #8: SIN USAR
+gflags *flags_teclas;
+
+extern unsigned char key;
+
+// Función que trata las consecuencias de un evento por teclado
+void hook (void)
+{
+  switch (key) {
+    // Presionamos 'q'
+    case 16:
+      end_multitasking();
+		  break;
+    // Presionamos 'a'
+    case 30:
+      setFlag(flags_teclas, FLAG1);
+		  break;
+    // Presionamos 'z'
+    case 44:
+      setFlag(flags_teclas, FLAG2);
+      break;
+    //tecla 'k'
+    case 37:
+      setFlag(flags_teclas, FLAG3);
+		  break;
+    //tecla 'm'
+    case 50:
+      setFlag(flags_teclas, FLAG4);
+		  break;
+    //tecla '+'
+    case 27:
+      setFlag(flags_teclas, FLAG5);
+		  break;
+    //tecla '-'
+    case 53:
+      setFlag(flags_teclas, FLAG6);
+      break;
+  }
+  key = 0;
+}
+
+
+void main(void)
+{
+  //Asignamos la función de hook's
+  set_kb_hook(hook);
+  init_data();
+  create_tasks();
+  create_sems();
+  paint_bg();
+
+	start_multitasking();
+}

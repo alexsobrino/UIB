@@ -1,0 +1,48 @@
+#!/bin/bash
+
+while [ 1 ]
+do
+	if dialog --menu 'Deteccion y configuracion de servicios - v.0.0.3\n------------------------------------------------\nPractica administracion de SO - UIB 2004\nAlejandro Sobrino <jander@bulma.net>' 0 0 0 'A' 'Detectar cuentas sin contraseñas o sin directorio personal.' 'B' 'Detectar directorios personales con las propiedades incorrectas.' 'C' 'Los servicios que hacen uso del PAM.' 'D' 'Las tarjetas de red y sus direcciones IP.' 'E' 'Los servicios que se están ejecutando desde el inetd.' 'F' 'Detectar si se está ejecutando un servidor DNS: primario, secundario o cache.' 'G' 'Detectar una mala configuración del resolv.conf.' 'H' 'Detectar si está en marcha el NFS y listar los directorios exportados y montados.' 'I' 'Detectar si está en marcha el NIS y mostrar información reelevante.' 'J' 'Listar las conexiones establecidas y los servidores que están escuchando.' 2> tmp
+	then
+		clear
+		opc=`cat tmp`
+		case "$opc" in
+		A)
+			scripts/usuarios.pl
+			;;
+		B)
+			scripts/home.pl
+			;;
+		C)
+			scripts/pam.pl
+			;;
+		D)
+			scripts/ip.pl
+			;;
+		E)
+			scripts/inetd.pl
+			;;
+		F)
+			scripts/bind.pl
+			;;
+		G)
+			scripts/resolv.pl
+			;;
+		H)
+			scripts/nfs.pl
+			;;
+		I)
+			scripts/nis.pl
+			;;
+		J)
+			scripts/listen.pl
+			;;
+		esac
+		echo -e "\nPresione ENTER para volver al menú\n"
+		read
+	else
+		rm tmp
+		echo "Salida..."
+		exit 0;
+	fi
+done

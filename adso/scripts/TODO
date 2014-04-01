@@ -1,0 +1,3 @@
+- Detectar directorios personales con las propiedades incorrectas.
+- Detectar si se está ejecutando un servidor DNS (el BIND) y si está haciendo de primario o secundario de alguna zona o sólo de cache.
+OK - Detectar si está en marcha el NIS. Si es así mostrar la información más relevante (y a qué servidor está conectado).

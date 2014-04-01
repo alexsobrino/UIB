@@ -1,0 +1,47 @@
+#ifndef _TASK_H_
+#define _TASK_H_
+
+#include "fpu.h"
+#include "flag.h"
+
+/* Estado de las tareas
+ * 0 - Activa
+ * 1 - Bloqueada por semáforo binario
+ * 2 - Bloqueada por semáforo IPCP
+ * 3 - Suspendida hasta un cierto instante de tiempo
+ * 4 - Suspendida por un evento aperiódico */
+#define ACTIVE 0
+#define SUSP_SEM_BIN 1
+#define SUSP_SEM_IPCP 2
+#define SUSP_TIME 3
+#define SUSP_APER 4
+
+// Mismo número de tareas máximas que de prioridades
+#define MAX_TASKS	20
+#define MAX_PRIOR_DIN 20
+
+#define FPU_BUFFER_SIZE 512
+#define MAX_STACK_SIZE 1024
+
+// Definición de la estructura TCB (Task Control Block)
+struct t_tcb {
+	unsigned tid;	// identificador de la tarea
+	unsigned tss;	// Stack Segment de la tarea
+	unsigned tsp;	// Stack Pointer de la tarea
+	int stack[MAX_STACK_SIZE];
+	char fpu_buf[FPU_BUFFER_SIZE];
+	unsigned int prior;             // las prioridades son únicas
+	unsigned int state;             // estado de la tarea
+	unsigned long int wakeup_time;  // en caso de SUSP_TIME indica el tiempo para reactivar la tarea
+  gflags_event event;             // En caso de  SUSP_APER indica los eventos con los cuales se debe despertar
+	unsigned int prior_din[MAX_PRIOR_DIN];
+	unsigned int a_prior_din;       // Índice de la prioridad dinámica actual sobre la lista de prioridades
+                                  // dinámicas de la tarea. Como restricción se ha impuesto que no haya
+                                  // más prioridades que número de tareas.
+};
+
+void def_task (void far *, unsigned int);
+void create_idle_task (int);
+void kill_task (struct t_tcb *);
+
+#endif // _TASK_H_
